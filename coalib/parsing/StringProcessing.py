@@ -47,3 +47,54 @@ def search_for(pattern, string, max_matches = 0, flags = 0):
         raise ValueError("Provided value for parameter 'max_matches' below "
                          "zero. Negative numbers are not allowed.")
 
+
+def split(pattern,
+          string,
+          max_split = 0,
+          remove_empty_matches = False):
+
+    """
+    Splits the given string by the specified pattern. The return character (\n)
+    is not a natural split pattern (if you don't specify it yourself).
+    This function ignores escape sequences.
+    :param pattern:              A regex pattern that defines where to split.
+    :param string:               The string to split by the defined pattern.
+    :param max_split:            Defines the maximum number of splits. If 0 is
+                                 provided, unlimited splits are made.
+    :param remove_empty_matches: Defines whether empty entries should
+                                 be removed from the resulting list.
+    :raises ValueError:          Raised when a negative number is provided for
+                                 max_split.
+    :return:                     A list containing the split up strings.
+    """
+
+    # re.split() is not usable any more for this function. It has a bug when
+    # using too much capturing groups "()". Using the same approach like
+    # unescaped_split().
+    match_strings = []
+    matches = search_for(r"(.*?)(?:" + pattern + r")",
+                         string,
+                         max_split,
+                         re.DOTALL)
+
+    # Holds the end position of the last processed and matched string. Needed
+    # since matches is a callable_iterator and is not subscriptable, means the
+    # last element of the result is not accessible with [] on the fly.
+    last_pos = 0
+    # Process each returned MatchObject.
+    for item in matches:
+        if (not remove_empty_matches or len(item.group(1)) != 0):
+            # Return the first matching group. The pattern from parameter can't
+            # change the group order.
+            match_strings.append(item.group(1))
+
+        # Update the end position.
+        last_pos = item.end()
+
+    # Append the rest of the string, since it's not in the result list (only
+    # matches are captured that have a leading separator).
+    if (not remove_empty_matches or len(string[last_pos : ]) != 0):
+        match_strings.append(string[last_pos : ])
+
+    return match_strings
+

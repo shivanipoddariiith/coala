@@ -21,7 +21,7 @@ script, `run_tests.py`, lying in the coala root folder.
 There's only one constraint: The name of the test file has to end with
 `Test.py` (for example `MyCustomTest.py`, but not `MyCustomTestSuite.py`).
 
-> **HINT**
+> **NOTE**
 >
 > Often you don't want to run all available tests. To run your specific one,
 > type (in the coala root folder):

@@ -10,6 +10,7 @@ from coalib.output.ConfWriter import ConfWriter
 from coalib.output.NullInteractor import NullInteractor
 from coalib.output.printers.ConsolePrinter import ConsolePrinter
 from coalib.output.printers.FilePrinter import FilePrinter
+from coalib.output.printers.HTMLPrinter import HTMLPrinter
 from coalib.output.printers.NullPrinter import NullPrinter
 from coalib.output.ConsoleInteractor import ConsoleInteractor
 from coalib.output.printers.LOG_LEVEL import LOG_LEVEL
@@ -149,8 +150,11 @@ class SectionManager:
                 # if some other printer fails
                 if log_type == "none":
                     self.log_printer = NullPrinter()
-                else:
+                if log_type.endswith('.txt'):
                     self.log_printer = FilePrinter(filename=log_type,
+                                                   log_level=log_level)
+                if log_type.endswith('.html'):
+                    self.log_printer = HTMLPrinter(filename=log_type,
                                                    log_level=log_level)
             except:
                 self.log_printer = ConsolePrinter(log_level=log_level)

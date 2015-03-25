@@ -33,10 +33,9 @@ class HTMLWriter:
         if not isinstance(filename, str):
             raise TypeError("filename must be a string")
 
+
         self.file = open(filename, 'w+')
 
-        if self.file is None:
-            raise TypeError
 
         self.filename = filename
         self.__write_header()
@@ -90,5 +89,8 @@ class HTMLWriter:
         self.write("</"+tag_name+">")
 
     def write(self, *args):
-        for line in args:
-            self.file.write(" "*self.indentation + line + "\n")
+        if self.file is not None:
+            for line in args:
+                self.file.write(" "*self.indentation + line + "\n")
+        else:
+           pass

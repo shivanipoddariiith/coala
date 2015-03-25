@@ -32,31 +32,38 @@ class HTMLWriterTest(unittest.TestCase):
                         ['<!DOCTYPE html>\n',
                          '<html>\n',
                          '</html>\n'])
+        file.close()
         del self.uut
 
     def test_write_comment(self):
         self.uut = HTMLWriter(self.filename)
-        self.uut.write_comment("testing comments")
-        with open(self.filename) as file:
+        file = open(self.filename)
+        if file is not None:
+            self.uut.write_comment("testing comments")
             lines = file.readlines()
-        self.assertEqual(lines,
-                         ['<!DOCTYPE html>\n',
-                          '<html>\n',
-                          '<!--testing comments-->\n',
-                          '</html>\n'])
+
+            self.assertEqual(lines,
+                        ['<!DOCTYPE html>\n',
+                         '<html>\n',
+                         '<!--testing comments-->\n',
+                         '</html>\n'])
+        file.close()
         del self.uut
 
     def test_write_tags(self):
         self.uut = HTMLWriter(self.filename)
         self.tag_dict = {'p':'test'}
-        self.uut.write_tags(**self.tag_dict)
-        with open(self.filename) as file:
+        file = open(self.filename)
+        if file is not None:
+            self.uut.write_tags(**self.tag_dict)
             lines = file.readlines()
-        self.assertEqual(lines,
-                         ['<!DOCTYPE html>\n',
-                          '<html>\n',
-                          '<p> test </p>\n',
-                          '</html>\n'])
+
+            self.assertEqual(lines,
+                        ['<!DOCTYPE html>\n',
+                         '<html>\n',
+                         '<p> test </p>\n',
+                         '</html>\n'])
+        file.close()
         del self.uut
         
 

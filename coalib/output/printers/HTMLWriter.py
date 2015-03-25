@@ -15,14 +15,24 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
 class HTMLWriter:
-    def __init__(self, filename, indentation_per_tag=2):
-        self.filename = filename
+    """
+        Facilitates Printing HTMLPrinter.  If the directory of the given file doesn't exist or if there's any
+        access problems, an exception will be thrown.
 
-        self.indentation = 0
+        :param filename: the name of the file to put the data into (string).
+        :param indentation_per_tag: spaces used to indent every subsequent HTML tag
+
+    """
+
+    def __init__(self, filename, indentation_per_tag=2, indentation=0):
+
         self.indentation_per_tag = indentation_per_tag
-
-        self.file = open(filename, "w")
+        self.indentation = indentation
+        self.file = None
+        self.file = open(filename, 'w+')
+        self.filename = filename
         self.__write_header()
+
 
     def __del__(self):
         self.__write_footer()

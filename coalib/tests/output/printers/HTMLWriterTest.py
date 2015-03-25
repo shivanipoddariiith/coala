@@ -21,30 +21,43 @@ class HTMLWriterTest(unittest.TestCase):
         self.assertRaises(TypeError, HTMLWriter, 5)
         with open(self.filename) as file:
             lines = file.readlines()
+        self.assertEqual(lines, [])
+        del self.uut
+
+    def test_printing_header_footer(self):
+        self.uut = HTMLWriter(self.filename)
+        with open(self.filename) as file:
+            lines = file.readlines()
         self.assertEqual(lines,
                         ['<!DOCTYPE html>\n',
-                         '<html>\n'])
+                         '<html>\n',
+                         '</html>\n'])
+        del self.uut
 
     def test_write_comment(self):
-        self.uut.write_comment("test1 test2")
-        with open(self.filename) as file:
-            lines = file.readlines()
-        self.assertEqual(lines,['<!--test1-->',
-                                '<!--test2-->'])
-
-    def test_printing_header(self):
+        self.uut = HTMLWriter(self.filename)
+        self.uut.write_comment("testing comments")
         with open(self.filename) as file:
             lines = file.readlines()
         self.assertEqual(lines,
-                        ['<!DOCTYPE html>\n',
-                         '<html>\n'])
+                         ['<!DOCTYPE html>\n',
+                          '<html>\n',
+                          '<!--testing comments-->\n',
+                          '</html>\n'])
+        del self.uut
 
-    def test_printing_footer(self):
+    def test_write_tags(self):
+        self.uut = HTMLWriter(self.filename)
+        self.tag_dict = {'p':'test'}
+        self.uut.write_tags(**self.tag_dict)
         with open(self.filename) as file:
             lines = file.readlines()
-        self.assertEqual(lines,['</html>'])
-
-
+        self.assertEqual(lines,
+                         ['<!DOCTYPE html>\n',
+                          '<html>\n',
+                          '<p> test </p>\n',
+                          '</html>\n'])
+        del self.uut
         
 
 if __name__ == '__main__':

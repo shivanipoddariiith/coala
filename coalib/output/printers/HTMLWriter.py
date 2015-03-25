@@ -29,7 +29,15 @@ class HTMLWriter:
         self.indentation_per_tag = indentation_per_tag
         self.indentation = indentation
         self.file = None
+
+        if not isinstance(filename, str):
+            raise TypeError("filename must be a string")
+
         self.file = open(filename, 'w+')
+
+        if self.file is None:
+            raise TypeError
+
         self.filename = filename
         self.__write_header()
 

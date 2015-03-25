@@ -42,7 +42,8 @@ class HTMLWriter:
 
 
     def __del__(self):
-        self.__write_footer()
+        if self.file is not None:
+            self.__write_footer()
         self.file.close()
 
     def __write_header(self):

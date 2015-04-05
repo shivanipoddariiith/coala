@@ -21,35 +21,43 @@ class LogPrinter(Printer):
         datetime.today().strftime(format) method.
         """
         Printer.__init__(self)
-
+        print("Instantiating LogPrinter")
         self.log_level = log_level
         self.timestamp_format = timestamp_format
 
     def _get_log_prefix(self, log_level, timestamp):
+        print("In get log prefix function")
         datetime_string = timestamp.strftime(self.timestamp_format)
 
         if datetime_string != "":
             datetime_string = "[" + datetime_string + "]"
-
         return '[{}]{} '.format(_(LOG_LEVEL.reverse.get(log_level, "ERROR")),
                                 datetime_string)
 
     def debug(self, message, timestamp=None, **kwargs):
+        print("In debug function")
+        self.log_message_level = LOG_LEVEL.DEBUG
         return self.log_message(LogMessage(LOG_LEVEL.DEBUG, message),
                                 timestamp=timestamp,
                                 **kwargs)
 
     def warn(self, message, timestamp=None, **kwargs):
+        print("In warn function")
+        self.log_message_level = LOG_LEVEL.DEBUG
         return self.log_message(LogMessage(LOG_LEVEL.WARNING, message),
                                 timestamp=timestamp,
                                 **kwargs)
 
     def err(self, message, timestamp=None, **kwargs):
+        print("In err function")
+        self.log_message_level = LOG_LEVEL.DEBUG
         return self.log_message(LogMessage(LOG_LEVEL.ERROR, message),
                                 timestamp=timestamp,
                                 **kwargs)
 
     def log(self, log_level, message, timestamp=None, **kwargs):
+        print("In log function")
+        self.log_message_level = LOG_LEVEL.DEBUG
         return self.log_message(LogMessage(log_level, message),
                                 timestamp=timestamp,
                                 **kwargs)
@@ -60,6 +68,7 @@ class LogPrinter(Printer):
                       log_level=LOG_LEVEL.ERROR,
                       timestamp=None,
                       **kwargs):
+        print("In log_exception function")
         if not isinstance(exception, BaseException):
             raise TypeError("log_exception can only log derivatives of "
                             "BaseException.")
@@ -77,6 +86,7 @@ class LogPrinter(Printer):
             **kwargs)
 
     def log_message(self, log_message, timestamp=None, **kwargs):
+        print("In log_message function")
         if not isinstance(log_message, LogMessage):
             raise TypeError("log_message should be of type LogMessage.")
 
@@ -85,6 +95,7 @@ class LogPrinter(Printer):
 
         if not isinstance(timestamp, datetime):
             timestamp = datetime.today()
-
+        self.log_message_level = log_message.log_level
+        print("Log_message_level in actual class is " + str(log_message.log_level))
         prefix = self._get_log_prefix(log_message.log_level, timestamp)
         return self.print(prefix, log_message.message, delimiter="", **kwargs)
